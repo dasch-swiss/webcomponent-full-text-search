@@ -1,0 +1,21 @@
+<!doctype html>
+<!--HTML document to test the webcomponent-->
+<html>
+  <head>
+    <script 
+        src="bundle.js">
+        
+    </script>
+  </head>
+  <body>
+        <button onclick="logUrl()">Log URL</button>
+        <full-text-search project="http://rdfh.ch/projects/0803" restype="http://www.knora.org/ontology/0803/incunabula#book"/>
+  </body>
+  <script>
+      function logUrl(){
+            const myElem = document.querySelector('full-text-search');
+            console.log('url', myElem.url);
+        }
+  </script>
+  
+</html>
