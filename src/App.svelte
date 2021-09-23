@@ -5,27 +5,31 @@
 	 * The output of the component is stored in the url variable, which can be read from outside the component.
 	 */
 	export let host = '0.0.0.0:3333'; //Defaults to local dsp-api
-	export let project, restype; //Filters that can only be provided from outside the component. Have to be in iri format.
+	export let project, restype, standoff; //Filters that can only be provided from outside the component. Have to be in iri format.
 	export let offset = 0; //Can also be adjusted from outside the component for paging
 	let searchString;
-	let noOfResults = 25;
 	export let url; //export so it is readable from outside the component
 	/**
 	 * Creates the url (which contains the query) for viewer components to read. Use with HTTP GET!
 	 */
 	function search(){
-		url = 'http://' + host + '/v1/search/' + encodeURIComponent(searchString) + '?searchtype=fulltext';
+		url = 'http://' + host + '/v2/search/' + encodeURIComponent(searchString);
+		let currId = '?'
 		if (restype){ //resource type iri was provided from outside the component
-			url += '&filter_by_restype=' + encodeURIComponent(restype);
+			url += currId + 'limitToResourceClass=' + encodeURIComponent(restype);
+			currId = '&';
 		}
 		if (project){ //project iri was provided from outside the component
-			url += '&filter_by_project=' + encodeURIComponent(project);
+			url += currId + 'limitToProject=' + encodeURIComponent(project);
+			currId = '&';
 		}
-		if (noOfResults && noOfResults != 25){
-			url += '&show_nrows=' + noOfResults.toString();
+		if (standoff){
+			url += currId + 'limitToStandoffClass=' + encodeURIComponent(standoff);
+			currId = '&';
 		}
 		if (offset){
-			url += '&start_at=' + offset.toString();
+			url += currId + 'offset=' + offset.toString();
+			currId = '&';
 		}
 		//The following lines are used for testing, if you need the request to be sent.
 		/*
@@ -39,8 +43,8 @@
 					}
 				)
 			}
-		);*/
-		
+		);
+		*/
 	}
 	/**
 	 * Call with parameter, so Svelte knows to resend the request for the button. Checks whether the input is valid.
@@ -58,9 +62,6 @@
 		<button class="searchbutton" disabled='{inputInvalid(searchString)}' on:click={search}>Search</button>
 	</div>
 	<div class="filter">
-		<label>Number of results
-			<input type=number bind:value={noOfResults}>
-		</label>
 		<label>Start at
 			<input type=number bind:value={offset}>
 		</label>
