@@ -6,7 +6,6 @@
 	 */
 	export let host = '0.0.0.0:3333'; //Defaults to local dsp-api
 	export let project, restype, standoff; //Filters that can only be provided from outside the component. Have to be in iri format.
-	export let offset = 0; //Can also be adjusted from outside the component for paging
 	let searchString;
 	export let url; //export so it is readable from outside the component
 	/**
@@ -25,10 +24,6 @@
 		}
 		if (standoff){
 			url += currId + 'limitToStandoffClass=' + encodeURIComponent(standoff);
-			currId = '&';
-		}
-		if (offset){
-			url += currId + 'offset=' + offset.toString();
 			currId = '&';
 		}
 		//The following lines are used for testing, if you need the request to be sent.
@@ -61,11 +56,6 @@
 		<input class="searchvalue" bind:value={searchString} placeholder="Enter search string">
 		<button class="searchbutton" disabled='{inputInvalid(searchString)}' on:click={search}>Search</button>
 	</div>
-	<div class="filter">
-		<label>Start at
-			<input type=number bind:value={offset}>
-		</label>
-	</div>	
 </div>
 
 <style>
